@@ -31,7 +31,7 @@ def main():
 
     table_list = table_list_creator(board_size)
 
-    pvp = 1
+    pvp = 0
     xoro = 1
     win = 0
 
@@ -46,16 +46,16 @@ def main():
                 [x, y] = click_location
                 pos_x = x // cell_size
                 pos_y = y // cell_size
-                position = [pos_x, pos_y]
+                position = [pos_y, pos_x]
                 if position_searcher(position, table_list):
-                    table_list[pos_x, pos_y] = xoro
+                    table_list[pos_y, pos_x] = xoro
                     if pvp == 0:
-                        if (win_line := pvsp.winner(xoro, position, table_list)) is not False:
+                        if (win_line := pvsp.winner(str(xoro), table_list, cell_size)) is not False:
                             win = 1
-                        if win == 0 and pvsp.empty_space(table_list) is not False:
-                            [pos_x, pos_y] = pvsc.next_step(table_list)
-                            position = [pos_x, pos_y]
-                            table_list[pos_x, pos_y] = 2
+                        if win == 0:
+                            [pos_x, pos_y] = pvsc.next_step(table_list, str((xoro % 2) +1), str(xoro))
+                            #position = [pos_y, pos_x]
+                            table_list[pos_y, pos_x] = 2
                             xoro = (xoro % 2) +1
                     if (win_line := pvsp.winner(str(xoro), table_list, cell_size)) is not False:
                         win = 1
@@ -63,7 +63,7 @@ def main():
 
         for i in range(board_size):
             for j in range(board_size):
-                b = table_list[i, j]
+                b = table_list[j, i]
                 if b == '1':
                     [x, y] = [i*cell_size, j*cell_size]
                     pygame.draw.line(screen, "blue", (x+10, y+10), (x+cell_size-10, y+cell_size-10), 5)

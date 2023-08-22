@@ -82,8 +82,8 @@ def line_check(xoro, board):
 
 def winner(xoro, board, cell_size):
     if (win_line := line_check(xoro, board)) is not False:
-        [x1, y1] = win_line[0]
-        [x2, y2] = win_line[4]
+        [y1, x1] = win_line[0]
+        [y2, x2] = win_line[4]
         if x1 == x2:
             return [[x1 * cell_size + cell_size/2, y1 * cell_size + 10], [x2 * cell_size + cell_size/2, (y2 + 1) * cell_size - 10]]
         elif y1 == y2:
@@ -91,7 +91,7 @@ def winner(xoro, board, cell_size):
         elif (x1 - y1) == (x2 - y2):
             return [[y1 * cell_size + 10, x1 * cell_size + 10], [(y2 + 1) * cell_size - 10, (x2 + 1) * cell_size - 10]]
         else:
-            return [[(y1 + 1) * cell_size - 10, x1 * cell_size + 10],[y2 * cell_size + 10, (x2 + 1) * cell_size - 10]]
+            return [[y1 * cell_size + 10, (x1+1) * cell_size - 10],[(y2+1) * cell_size - 10, x2 * cell_size + 10]]
     else:
         return False
     
