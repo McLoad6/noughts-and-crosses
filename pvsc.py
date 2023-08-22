@@ -1,27 +1,5 @@
 import numpy as np
 
-board = np.array([
-    ['2', '2', '2', ' ', ' ', ' ', '1', ' ', ' ', ' '],
-    [' ', ' ', ' ', '1', ' ', '1', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', '1', '1', '1', '2', '2', '2', ' '],
-    [' ', ' ', '1', '1', ' ', '1', '1', ' ', ' ', ' '],
-    [' ', ' ', ' ', '1', ' ', '1', '1', ' ', ' ', ' '],
-    [' ', ' ', '1', ' ', ' ', ' ', '1', '1', '1', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '1'],
-    [' ', ' ', ' ', ' ', '1', ' ', ' ', ' ', ' ', ' '],
-    ['2', ' ', ' ', '1', ' ', '1', ' ', ' ', ' ', ' ']
-])
-
-board2 = np.array([
-    ['2', '2', ' ', ' ', ' ', ' ', '1'],
-    [' ', ' ', ' ', '1', ' ', '1', ' '],
-    ['2', ' ', ' ', ' ', ' ', ' ', ' '],
-    ['2', ' ', ' ', ' ', ' ', ' ', '2'],
-    [' ', '2', '2', ' ', ' ', ' ', '1'],
-    [' ', ' ', ' ', '1', ' ', '1', ' '],
-    [' ', ' ', '1', ' ', ' ', ' ', '1']
-])
 
 def get_crossing_lines(array, row, col):
     diagona1 = np.diagonal(array, col - row)
@@ -140,10 +118,8 @@ def test_a_line(line: list):
                     possible_moves.append(move)
     return possible_moves
 
-def get_possible_moves(array):
-    all_line_indexes = get_indexes_for_all_lines(array)
+def get_possible_moves(all_lines, all_line_indexes):
     possible_moves = []
-    all_lines = get_all_lines(array)
     for i in range(len(all_lines)):
         moves = test_a_line(all_lines[i])
         if len(moves) != 0:
@@ -156,8 +132,8 @@ def get_possible_moves(array):
             possible_moves.extend(moves)
     return possible_moves
 
-def move_chooser(array, xoro):
-    possible_moves = get_possible_moves(array)
+def move_chooser(all_lines, all_line_indexes, xoro):
+    possible_moves = get_possible_moves(all_lines, all_line_indexes)
     four_oponent = []
     three_my = []
     three_oponent = []
@@ -342,34 +318,28 @@ def move_chooser(array, xoro):
     return []
 
 def next_step(array, xoro, opon):
-    if (step := move_chooser(array,xoro)) != []:
+    all_line_indexes = get_indexes_for_all_lines(array)
+    all_lines = get_all_lines(array)
+    if (step := move_chooser(all_lines, all_line_indexes, xoro)) != []:
         return step
     xoro_line2 = []
-    xoro_line1 = []
-    opon_line2 = []
-    opon_line1 = []
-    all_lines = get_all_lines(array)
     for i in range(len(all_lines)):
         xoro2 = ''.join(all_lines[i]).count(xoro * 2)
-        xoro1 = ''.join(all_lines[i]).count(xoro)
-        opon2 = ''.join(all_lines[i]).count(opon * 2)
-        opon1 = ''.join(all_lines[i]).count(opon)
         if xoro2 > 0:
             xoro_line2.append(i)
-        if xoro1 > 0:
-            xoro_line1.append(i)
-        if opon2 > 0:
-            opon_line2.append(i)
-        if opon1 > 0:
-            opon_line1.append(i)
+    if xoro_line2 != []:
+        for i in xoro_line2:
+            step = [j for j in range(len(all_lines[i]) -1) if all_lines[i][j] == xoro and all_lines[i][j+1] == xoro]
+            if step != []:
+                for j in step:
+                    if all_lines[i][j-1] == ' ':
+                        return all_line_indexes[i][j-1]
+                    elif all_lines[i][j+2] == ' ':
+                        return all_line_indexes[i][j+2]
     for i in range(4,8):
         for j in range(4,8):
             if all_lines[j][i] == ' ':
                 return [i,j]
-    #if xoro_line2 != []:
         
-
-
-
 
 #print(move_chooser(board2,'1'))

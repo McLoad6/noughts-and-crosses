@@ -54,7 +54,6 @@ def main():
                             win = 1
                         if win == 0:
                             [pos_x, pos_y] = pvsc.next_step(table_list, str((xoro % 2) +1), str(xoro))
-                            #position = [pos_y, pos_x]
                             table_list[pos_y, pos_x] = 2
                             xoro = (xoro % 2) +1
                     if (win_line := pvsp.winner(str(xoro), table_list, cell_size)) is not False:
