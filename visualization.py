@@ -16,11 +16,42 @@ def position_searcher(position: list, table_list: list) -> bool:
 
 
 def main():
+
     pygame.init()
+
     screen_size = 800
     board_size = 10
+
     screen = pygame.display.set_mode((screen_size, screen_size))
     pygame.display.set_caption("Noughts and Crosses Board")
+    font = pygame.font.Font(None, 36)
+    button_width, button_height = 150, 50
+
+    def draw_button(x, y, text):
+        pygame.draw.rect(screen,"saddle brown",(x,y,button_width, button_height))
+        text_surface = font.render(text, True, "black")
+        text_rect = text_surface.get_rect(center=(x + button_width // 2, y + button_height // 2))
+        screen.blit(text_surface, text_rect)
+
+    pvp = -1
+
+    while pvp == -1:
+        screen.fill("burlywood1")
+        draw_button(50, 70, "P vs. P")
+        draw_button(580, 70, "P vs. C")
+        pygame.display.flip()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = pygame.mouse.get_pos()
+                if 50 <= x <= 50 + button_width and 70 <= y <= 70 + button_height:
+                    pvp = 1
+                elif 580 <= x <= 580 + button_width and 70 <= y <= 70 + button_height:
+                    pvp = 0
+    time.sleep(0.3)
+
     screen.fill("burlywood1")
     cell_size = screen_size // board_size
     for row in range(board_size):
@@ -31,7 +62,6 @@ def main():
 
     table_list = table_list_creator(board_size)
 
-    pvp = 0
     xoro = 1
     win = 0
 
