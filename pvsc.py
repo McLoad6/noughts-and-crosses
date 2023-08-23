@@ -317,29 +317,35 @@ def move_chooser(all_lines, all_line_indexes, xoro):
         return two_oponent[0][0]
     return []
 
+depth = 0
+
 def next_step(array, xoro, opon):
+    global depth
     all_line_indexes = get_indexes_for_all_lines(array)
     all_lines = get_all_lines(array)
     if (step := move_chooser(all_lines, all_line_indexes, xoro)) != []:
+        depth = 0
         return step
-    xoro_line2 = []
-    for i in range(len(all_lines)):
-        xoro2 = ''.join(all_lines[i]).count(xoro * 2)
-        if xoro2 > 0:
-            xoro_line2.append(i)
-    if xoro_line2 != []:
-        for i in xoro_line2:
-            step = [j for j in range(len(all_lines[i]) -1) if all_lines[i][j] == xoro and all_lines[i][j+1] == xoro]
-            if step != []:
-                for j in step:
-                    if all_lines[i][j-1] == ' ':
-                        return all_line_indexes[i][j-1]
-                    elif all_lines[i][j+2] == ' ':
-                        return all_line_indexes[i][j+2]
-    for i in range(4,8):
-        for j in range(4,8):
-            if all_lines[j][i] == ' ':
-                return [i,j]
-        
-
-#print(move_chooser(board2,'1'))
+    sum = 0
+    for i in array:
+        sum += ''.join(i).count(xoro)
+    if sum < 2:
+        for i in range(4,8):
+            for j in range(4,8):
+                if all_lines[j][i] == ' ':
+                    return [i,j]
+    else:
+        if depth != 3:
+            depth += 1
+            for i in range(array.shape[0]):
+                for j in range(array.shape[1]):
+                    if array[i][j] == ' ':
+                        array[i][j] = xoro
+                        step = next_step(array, opon, xoro)
+                        array[i][j] = ' '
+                        if step != []:
+                            return step
+                    if i == (array.shape[0] - 1) and j == (array.shape[1] -1):
+                        depth -= 1
+        return []
+    print("hiba")
